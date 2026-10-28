@@ -8,3 +8,11 @@
 - **ゲーム本体 v0.4 反映済み：** `index.html` の `PREFS` にこのExcel/CSVの「抽選確率」「累積確率」を数値で転記。JavaScript側では確率合計・累積確率を再計算しない。統計データ変更時はExcelで再計算してゲームへ反映する。
 
 公式表：https://www.e-stat.go.jp/stat-search/files?cycle=7&layout=datalist&month=0&page=1&tclass1=000001053058&tclass2=000001053061&tclass3=000001053064&toukei=00450011&tstat=000001028897&year=20250
+
+## 出生数の多い順へ変更（v0.5）
+
+- 元の「都道府県_確率計算」と「原表照合_2025」は並べ替えずに保持。
+- Excelに「抽選用_確率順」シートを追加し、出生数の降順で47件の確率・累積確率を計算。
+- CSVと `index.html` の `PREFS` を同じ順番に変更。
+- `PREFS` の第2列はExcel算出の確率、第3列は並べ替え後の累積確率。JavaScriptは抽選時に再計算しない。
+- 元データの数値を変更した場合、抽選用シートを再ソートしてゲームへ反映する。

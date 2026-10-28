@@ -12,22 +12,78 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.3 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.4 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-kicker" id="lifeNumber">出生記録 —</div><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2><p class="small" id="birthSub">あなたが生まれる場所を抽選します。</p><p id="birthOdds" class="pill" style="display:none"></p></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
 <section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">親や本人の属性はまだ抽選しません。欄はすべて仮配置です。出生地だけを抽選し、市区町村は公式の出生者数データを取り込んでから有効にします。</div></section>
-<section class="block"><div class="heading"><h2>抽選の検証</h2><span class="subtext">開発用デバッグ</span></div><div class="tool-box"><div class="test-controls"><select id="runs" aria-label="抽選回数"><option value="1000">1,000回</option><option value="10000">10,000回</option><option value="100000">100,000回</option></select><button id="testBtn" class="secondary">抽選テスト</button></div><div class="results" id="results" hidden><div class="metrics"><div class="metric"><b id="testN">—</b><span>試行回数</span></div><div class="metric"><b id="maxDiff">—</b><span>最大乖離（ポイント）</span></div></div><div class="detail">理論＝入力された重みの割合、結果＝実際に抽選された割合。47都道府県すべて表示します。</div><div class="result-list" role="region" aria-label="47都道府県の抽選結果一覧" tabindex="0"><div class="result-head"><span>都道府県</span><span class="right">理論</span><span class="right">結果</span></div><div id="resultRows"></div></div><p class="detail" id="testMemo"></p></div></div></section>
-<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の重み付き抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の実測抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
-<footer class="foot">⚠ 都道府県の数値はチャット内の前版UIから移植した暫定データです。2025年の公的統計原表との完全照合は未完了。分布の動作テストには使えますが、正式な統計モデルとは扱わないでください。<br>このファイルは外部ライブラリや通信を使わず、HTML / CSS / JavaScript だけで動作します。</footer>
+<section class="block"><div class="heading"><h2>抽選の検証</h2><span class="subtext">開発用デバッグ</span></div><div class="tool-box"><div class="test-controls"><select id="runs" aria-label="抽選回数"><option value="1000">1,000回</option><option value="10000">10,000回</option><option value="100000">100,000回</option></select><button id="testBtn" class="secondary">抽選テスト</button></div><div class="results" id="results" hidden><div class="metrics"><div class="metric"><b id="testN">—</b><span>試行回数</span></div><div class="metric"><b id="maxDiff">—</b><span>最大乖離（ポイント）</span></div></div><div class="detail">理論＝Excelで計算した出生確率、結果＝実際に抽選された割合。47都道府県すべて表示します。</div><div class="result-list" role="region" aria-label="47都道府県の抽選結果一覧" tabindex="0"><div class="result-head"><span>都道府県</span><span class="right">理論</span><span class="right">結果</span></div><div id="resultRows"></div></div><p class="detail" id="testMemo"></p></div></div></section>
+<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の実測抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
+<footer class="foot">都道府県の出生確率は、厚生労働省の2025年人口動態統計（確定数）と照合済みのExcel計算値を使用しています。対象は日本国内の日本人出生です。市区町村・親・本人の抽選はまだ未実装です。<br>このファイルは外部ライブラリや通信を使わず、HTML / CSS / JavaScript だけで動作します。</footer>
 </main>
 <script>
 'use strict';
-// 暫定重み。2025年公的統計原表との最終照合前。変更する場合はここだけ差し替える。
+// 2025年人口動態統計（確定数）。Excelで計算済みの値を転記。
+// 各行は [都道府県名, 抽選確率, 累積確率]。1.0 = 100%。
+// データの原本：data/birthplace_probabilities_2025.xlsx
 const PREFS = [
-['北海道',21802],['青森県',4737],['岩手県',4823],['宮城県',11079],['秋田県',3148],['山形県',4380],['福島県',7842],['茨城県',13409],['栃木県',8932],['群馬県',8950],['埼玉県',38812],['千葉県',32988],['東京都',85090],['神奈川県',50209],['新潟県',9580],['富山県',5125],['石川県',6242],['福井県',4314],['山梨県',4016],['長野県',9875],['岐阜県',9351],['静岡県',17092],['愛知県',44290],['三重県',8792],['滋賀県',8708],['京都府',12677],['大阪府',52598],['兵庫県',30110],['奈良県',6409],['和歌山県',4246],['鳥取県',2973],['島根県',3339],['岡山県',10426],['広島県',15238],['山口県',6401],['徳島県',3527],['香川県',5103],['愛媛県',6422],['高知県',3079],['福岡県',31710],['佐賀県',4611],['長崎県',6846],['熊本県',10193],['大分県',5666],['宮崎県',5923],['鹿児島県',8661],['沖縄県',11511]
+    ["北海道", 0.032479460116, 0.032479460116],
+    ["青森県", 0.007056930675, 0.039536390790],
+    ["岩手県", 0.007185048901, 0.046721439691],
+    ["宮城県", 0.016504904991, 0.063226344683],
+    ["秋田県", 0.004689722982, 0.067916067664],
+    ["山形県", 0.006525091061, 0.074441158725],
+    ["福島県", 0.011682594543, 0.086123753268],
+    ["茨城県", 0.019976015076, 0.106099768344],
+    ["栃木県", 0.013306418574, 0.119406186919],
+    ["群馬県", 0.013333234017, 0.132739420935],
+    ["埼玉県", 0.057820053482, 0.190559474417],
+    ["千葉県", 0.049143768017, 0.239703242434],
+    ["東京都", 0.126762556703, 0.366465799137],
+    ["神奈川県", 0.074798697961, 0.441264497099],
+    ["新潟県", 0.014271774512, 0.455536271611],
+    ["富山県", 0.007634952440, 0.463171224050],
+    ["石川県", 0.009298999635, 0.472470223685],
+    ["福井県", 0.006426767771, 0.478896991456],
+    ["山梨県", 0.005982823219, 0.484879814675],
+    ["長野県", 0.014711249823, 0.499591064499],
+    ["岐阜県", 0.013930622491, 0.513521686989],
+    ["静岡県", 0.025462752605, 0.538984439594],
+    ["愛知県", 0.065980886548, 0.604965326143],
+    ["三重県", 0.013097854020, 0.618063180163],
+    ["滋賀県", 0.012972715287, 0.631035895450],
+    ["京都府", 0.018885520406, 0.649921415855],
+    ["大阪府", 0.078357703108, 0.728279118964],
+    ["兵庫県", 0.044856276676, 0.773135395640],
+    ["奈良県", 0.009547787354, 0.782683182993],
+    ["和歌山県", 0.006325464987, 0.789008647980],
+    ["鳥取県", 0.004429017289, 0.793437665269],
+    ["島根県", 0.004974264624, 0.798411929893],
+    ["岡山県", 0.015532100320, 0.813944030212],
+    ["広島県", 0.022700762005, 0.836644792218],
+    ["山口県", 0.009535869379, 0.846180661597],
+    ["徳島県", 0.005254337025, 0.851434998622],
+    ["香川県", 0.007602178010, 0.859037176632],
+    ["愛媛県", 0.009567154062, 0.868604330694],
+    ["高知県", 0.004586930451, 0.873191261145],
+    ["福岡県", 0.047239871584, 0.920431132729],
+    ["佐賀県", 0.006869222576, 0.927300355305],
+    ["長崎県", 0.010198806713, 0.937499162017],
+    ["熊本県", 0.015184989311, 0.952684151328],
+    ["大分県", 0.008440905468, 0.961125056797],
+    ["宮崎県", 0.008823770400, 0.969948827197],
+    ["鹿児島県", 0.012902697187, 0.982851524383],
+    ["沖縄県", 0.017148475617, 1.000000000000]
 ];
-const TOTAL=PREFS.reduce((sum,p)=>sum+p[1],0);
-const CUMULATIVE=[];let cumulative=0;for(const [name,weight] of PREFS){cumulative+=weight;CUMULATIVE.push([name,cumulative]);}
-function pickPrefecture(){const r=Math.random()*TOTAL;for(const [name,limit] of CUMULATIVE){if(r<limit)return name;}return PREFS[PREFS.length-1][0];}
+function pickPrefecture() {
+    const random = Math.random();
+
+    for (let i = 0; i < PREFS.length; i++) {
+        if (random < PREFS[i][2]) {
+            return PREFS[i][0];
+        }
+    }
+
+    return PREFS[PREFS.length - 1][0];
+}
 const GROUPS={
  person:[['基本情報',['年齢','性別','健康状態','先天的な体質','持病・障害']],['心と生活',['元気','楽しさ','ストレス','自己肯定感','興味・関心']],['能力・適性',['学力','運動能力','創造性','コミュニケーション','集中力','学習適性（内部）','運動適性（内部）']],['経験',['勉強経験','運動経験','外遊び経験','ゲーム経験','創作経験','その他の経験']]],
  family:[['家族構成',['母親の年齢','父親の年齢','母親との同居','父親との同居','きょうだい','祖父母などの同居']],['経済・生活',['世帯年収','世帯貯蓄','生活費','住居','親の就業状態','育児に使える時間']],['親の特徴',['親の学歴','教育熱心度','情報収集力','意思の尊重度','養育への関与度','しつけ方針']],['家庭内の関係',['親子関係','家庭の安心感','保護者間の関係','家庭内のストレス']]],
@@ -37,8 +93,8 @@ let activeTab='person',currentPref=null,lifeNo=0;
 const $=id=>document.getElementById(id);
 function renderStats(){const panel=$('statPanel');panel.replaceChildren();for(const [groupTitle,fields] of GROUPS[activeTab]){const card=document.createElement('section');card.className='stat-card';const heading=document.createElement('h3');heading.textContent=groupTitle;card.append(heading);const grid=document.createElement('div');grid.className='stat-grid';for(const field of fields){const stat=document.createElement('div');stat.className='stat';const label=document.createElement('div');label.className='name';label.textContent=field;const value=document.createElement('div');value.className='value';const isPlace=field==='都道府県'&&currentPref!==null;value.textContent=isPlace?currentPref:'—';if(!isPlace)value.classList.add('empty');stat.append(label,value);grid.append(stat);}card.append(grid);panel.append(card);}}
 document.querySelectorAll('.tab').forEach(button=>button.addEventListener('click',()=>{activeTab=button.dataset.tab;document.querySelectorAll('.tab').forEach(b=>{const selected=b===button;b.classList.toggle('active',selected);b.setAttribute('aria-pressed',String(selected));});renderStats();}));
-$('rollBtn').addEventListener('click',()=>{currentPref=pickPrefecture();lifeNo++;$('lifeNumber').textContent=`出生記録 #${String(lifeNo).padStart(3,'0')}　·　0歳`;$('birthPlace').textContent=`${currentPref}に生まれました`;$('birthSub').textContent='市区町村：未抽選（公式データ待ち）';const w=PREFS.find(p=>p[0]===currentPref)[1];$('birthOdds').textContent=`この県の設定確率 ${(w/TOTAL*100).toFixed(2)}%`;$('birthOdds').style.display='inline-flex';$('rollBtn').textContent='もう一度抽選する';renderStats();});
-$('testBtn').addEventListener('click',()=>{const n=Number($('runs').value);const counts=new Map(PREFS.map(([name])=>[name,0]));for(let i=0;i<n;i++){const pref=pickPrefecture();counts.set(pref,counts.get(pref)+1);}const rows=PREFS.map(([name,w])=>({name,expected:w/TOTAL*100,actual:counts.get(name)/n*100})).sort((a,b)=>b.expected-a.expected);const max=Math.max(...rows.map(r=>Math.abs(r.expected-r.actual)));$('testN').textContent=n.toLocaleString('ja-JP');$('maxDiff').textContent=max.toFixed(2);const root=$('resultRows');root.replaceChildren();for(const r of rows){const row=document.createElement('div');row.className='result-row';const n1=document.createElement('div');n1.textContent=r.name;const n2=document.createElement('div');n2.className='right';n2.textContent=r.expected.toFixed(2)+'%';const n3=document.createElement('div');n3.className='right';n3.textContent=r.actual.toFixed(2)+'%';row.append(n1,n2,n3);root.append(row);}$('testMemo').textContent=`${n.toLocaleString('ja-JP')}回の独立抽選。結果のばらつきは毎回異なります。少数県は特に相対的なぶれが大きくなります。`;$('results').hidden=false;});
+$('rollBtn').addEventListener('click',()=>{currentPref=pickPrefecture();lifeNo++;$('lifeNumber').textContent=`出生記録 #${String(lifeNo).padStart(3,'0')}　·　0歳`;$('birthPlace').textContent=`${currentPref}に生まれました`;$('birthSub').textContent='市区町村：未抽選（公式データ待ち）';const probability=PREFS.find(p=>p[0]===currentPref)[1];$('birthOdds').textContent=`この県の出生確率 ${(probability*100).toFixed(2)}%`;$('birthOdds').style.display='inline-flex';$('rollBtn').textContent='もう一度抽選する';renderStats();});
+$('testBtn').addEventListener('click',()=>{const n=Number($('runs').value);const counts=new Map(PREFS.map(([name])=>[name,0]));for(let i=0;i<n;i++){const pref=pickPrefecture();counts.set(pref,counts.get(pref)+1);}const rows=PREFS.map(([name,probability])=>({name,expected:probability*100,actual:counts.get(name)/n*100})).sort((a,b)=>b.expected-a.expected);const max=Math.max(...rows.map(r=>Math.abs(r.expected-r.actual)));$('testN').textContent=n.toLocaleString('ja-JP');$('maxDiff').textContent=max.toFixed(2);const root=$('resultRows');root.replaceChildren();for(const r of rows){const row=document.createElement('div');row.className='result-row';const n1=document.createElement('div');n1.textContent=r.name;const n2=document.createElement('div');n2.className='right';n2.textContent=r.expected.toFixed(2)+'%';const n3=document.createElement('div');n3.className='right';n3.textContent=r.actual.toFixed(2)+'%';row.append(n1,n2,n3);root.append(row);}$('testMemo').textContent=`${n.toLocaleString('ja-JP')}回の独立抽選。結果のばらつきは毎回異なります。少数県は特に相対的なぶれが大きくなります。`;$('results').hidden=false;});
 renderStats();
 </script>
 </body></html>

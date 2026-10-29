@@ -10,22 +10,12 @@
 :root { --bg:#10191f; --surface:#1b2930; --surface2:#23343c; --line:#354750; --text:#f4f2ec; --muted:#b2bfc5; --accent:#d6b77b; --accent2:#aec2c8; --ok:#91d3b2; font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif; }
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:radial-gradient(circle at 80% 0%,#20333b 0,transparent 380px),var(--bg);color:var(--text);min-height:100dvh;line-height:1.55}button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}main{max-width:760px;margin:0 auto;padding:20px 16px calc(38px + env(safe-area-inset-bottom))}.topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0 20px}.eyebrow{letter-spacing:.17em;font-size:10px;font-weight:800;color:var(--accent)}h1{font-size:clamp(24px,6vw,32px);line-height:1.3;margin:5px 0 0;letter-spacing:.02em}.version{font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 9px;flex-shrink:0}.hero{border:1px solid #4b5653;background:linear-gradient(150deg,#263943,#18252d 70%);border-radius:22px;padding:24px 20px 20px;box-shadow:0 16px 36px #0002}.hero-kicker{font-size:12px;color:var(--muted)}.hero-content{text-align:center;padding:20px 4px 22px}.symbol{width:70px;height:70px;border-radius:23px;border:1px solid #67736f;display:grid;place-items:center;margin:0 auto 18px;background:#263c43;font-size:32px}.place{font-size:clamp(24px,6vw,36px);line-height:1.38;margin:0;letter-spacing:.03em}.small{color:var(--muted);font-size:12px;margin:7px 0 0}.primary{width:100%;min-height:54px;border:0;border-radius:14px;background:var(--accent);color:#172026;font-size:16px;font-weight:800}.primary:active{transform:translateY(1px);filter:brightness(.96)}.pill{display:inline-flex;align-items:center;gap:5px;background:#142029b0;border-radius:999px;padding:5px 11px;color:var(--accent2);font-size:11px}.block{margin-top:24px}.heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}h2{font-size:18px;margin:0}h3{font-size:13px;color:var(--accent);margin:0 0 12px}.subtext{font-size:11px;color:var(--muted)}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#0c1419;padding:5px;border:1px solid var(--line);border-radius:14px}.tab{background:transparent;color:var(--muted);border:0;border-radius:10px;padding:11px 2px;font-size:13px;font-weight:700;min-height:44px}.tab.active{background:var(--surface2);color:var(--text)}.stat-panel{padding-top:12px}.stat-card{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:16px;margin-bottom:10px}.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{border:1px solid #304149;background:var(--surface2);border-radius:10px;min-height:69px;padding:11px 10px}.stat .name{font-size:11px;color:var(--muted);margin-bottom:5px}.stat .value{font-size:16px;font-weight:750;word-break:break-word}.empty{color:#8fa0a8}.note{padding:12px 14px;border-left:3px solid var(--accent);color:var(--muted);font-size:12px;background:#1c2a31;border-radius:0 10px 10px 0}.tool-box{border:1px solid var(--line);background:var(--surface);padding:16px;border-radius:16px}.test-controls{display:flex;gap:9px;align-items:center}.test-controls select{min-width:0;flex:1;background:var(--surface2);color:var(--text);border:1px solid #52626a;border-radius:10px;padding:11px;font:inherit;font-size:14px;min-height:44px}.secondary{background:#314851;color:var(--text);border:1px solid #52626a;border-radius:10px;padding:10px 14px;min-height:44px;font-weight:700;font-size:13px}.secondary:disabled{opacity:.45;cursor:default}.results{margin-top:18px}.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0 14px}.metric{background:#243640;border-radius:12px;padding:11px}.metric b{font-size:21px;display:block;font-variant-numeric:tabular-nums}.metric span{font-size:11px;color:var(--muted)}.result-list{max-height:520px;overflow:auto;overscroll-behavior:contain;border:1px solid #344750;border-radius:12px}.result-head,.result-row{display:grid;grid-template-columns:minmax(86px,1fr) 70px 70px;gap:5px;align-items:center;padding:9px 12px;font-size:12px;border-bottom:1px solid #31424a}.result-head{position:sticky;top:0;background:#32454d;color:#e4eaf0;font-weight:700;z-index:1}.result-row{min-height:44px}.result-row:last-child{border-bottom:0}.right{text-align:right;font-variant-numeric:tabular-nums}.bar{height:3px;background:#a8bcc2;border-radius:5px;max-width:100%;margin-top:4px;opacity:.5}.detail{font-size:11px;color:var(--muted);margin-top:10px}.foot{color:#83969f;font-size:11px;line-height:1.65;margin:26px 0 10px}a{color:var(--accent)}.status-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #33434b;font-size:12px}.status-row:last-child{border-bottom:0}.ready{color:var(--ok)}.pending{color:var(--muted)}@media(min-width:650px){main{padding-top:28px}.hero{padding:30px}.stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:360px){.stat-grid{gap:6px}.stat{padding:9px}.result-head,.result-row{grid-template-columns:minmax(70px,1fr) 65px 65px;padding-left:8px;padding-right:8px}}
 
-/* v0.6 抽選検証UI */
-.result-head,.result-row{grid-template-columns:minmax(80px,1fr) 66px 66px 58px;gap:5px}
-.result-title{margin:20px 0 8px;color:var(--text);font-size:14px}
-.copy-btn{width:100%;background:#3b5a54;border-color:#638e80;color:#e4f7eb}
-.copy-btn:active{filter:brightness(.93)}
-.city-filter{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px}
-.city-filter label{font-size:13px;font-weight:700}
-.city-filter select{min-height:44px;min-width:150px;flex:1;max-width:260px;background:var(--surface2);color:var(--text);border:1px solid #52626a;border-radius:10px;padding:8px 12px;font:inherit}
-@media(max-width:390px){.result-head,.result-row{grid-template-columns:minmax(78px,1fr) 60px 60px 51px;gap:3px;padding-left:7px;padding-right:7px;font-size:11px}}
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.6 ブラウザ版</span></header>
-<section class="hero" aria-live="polite"><div class="hero-kicker" id="lifeNumber">出生記録 —</div><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2><p class="small" id="birthSub">都道府県と市区町村を順番に抽選します。</p><p id="birthOdds" class="pill" style="display:none"></p></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
-<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">親や本人の属性はまだ抽選しません。欄はすべて仮配置です。出生地（都道府県・市区町村）だけを抽選します。親や本人の属性はまだ抽選しません。</div></section>
-<section class="block"><div class="heading"><h2>抽選の検証</h2><span class="subtext">開発用デバッグ</span></div><div class="tool-box"><div class="test-controls"><select id="runs" aria-label="抽選回数"><option value="1000">1,000回</option><option value="10000">10,000回</option><option value="100000">100,000回</option></select><button id="testBtn" class="secondary">抽選テスト</button></div><div class="results" id="results" hidden><div class="metrics"><div class="metric"><b id="testN">—</b><span>試行回数</span></div><div class="metric"><b id="maxDiff">—</b><span>県別最大乖離（ポイント）</span></div></div><button type="button" id="copyBtn" class="secondary copy-btn">全国の抽選結果を一括コピー</button><p id="copyStatus" class="detail" role="status" aria-live="polite">47都道府県と1,884市区町村・区、全件の理論値・実測値・件数をタブ区切りでコピーします。</p><h3 class="result-title">都道府県の結果（全国での割合）</h3><div class="result-list" role="region" aria-label="47都道府県の抽選結果一覧" tabindex="0"><div class="result-head"><span>都道府県</span><span class="right">理論</span><span class="right">実測</span><span class="right">件数</span></div><div id="resultRows"></div></div><div class="city-filter"><label for="debugPref">市区町村の内訳を見る県</label><select id="debugPref" aria-label="市区町村の内訳を表示する都道府県"></select></div><p class="detail">市区町村の割合は、その県が選ばれた回数を分母にした「県内の割合」です。県の当選回数が0なら実測値は「—」になります。</p><div class="result-list" role="region" aria-label="市区町村の抽選結果一覧" tabindex="0"><div class="result-head"><span>市区町村・区</span><span class="right">理論</span><span class="right">実測</span><span class="right">件数</span></div><div id="cityResultRows"></div></div><p class="detail" id="testMemo"></p></div></div></section>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.7 ブラウザ版</span></header>
+<section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
+<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">親や本人の属性はまだ抽選しません。欄はすべて仮配置です。出生地（都道府県・市区町村）だけを抽選します。</div></section>
 <section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
 <footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
 </main>
@@ -118,9 +108,6 @@ const GROUPS={
 let activeTab = 'person';
 let currentPref = null;
 let currentCity = null;
-let lifeNo = 0;
-let lastTest = null;
-let lastReport = '';
 
 const $ = id => document.getElementById(id);
 
@@ -156,141 +143,6 @@ function renderStats() {
     }
 }
 
-function addResultRow(parent, name, theory, observed, count, city) {
-    const row = document.createElement('div');
-    row.className = 'result-row';
-    const title = document.createElement('div');
-    title.textContent = name;
-    const theoretical = document.createElement('div');
-    theoretical.className = 'right';
-    theoretical.textContent = theory.toFixed(city ? 3 : 2) + '%';
-    const actual = document.createElement('div');
-    actual.className = 'right';
-    actual.textContent = observed === null ? '—' : observed.toFixed(city ? 3 : 2) + '%';
-    const number = document.createElement('div');
-    number.className = 'right';
-    number.textContent = count.toLocaleString('ja-JP');
-    row.append(title,theoretical,actual,number);
-    parent.append(row);
-}
-
-function showCityResults() {
-    if (!lastTest) return;
-    const pref = $('debugPref').value;
-    const prefDraws = lastTest.prefCounts.get(pref);
-    const root = $('cityResultRows');
-    root.replaceChildren();
-    const fragment = document.createDocumentFragment();
-    for (const city of CITIES[pref]) {
-        const count = lastTest.cityCounts.get(city[0]);
-        const actual = prefDraws === 0 ? null : count / prefDraws * 100;
-        addResultRow(fragment, city[1], city[2]*100, actual, count, true);
-    }
-    root.append(fragment);
-}
-
-function buildReport(n, prefCounts, cityCounts) {
-    const lines = [
-        '日本のご家庭ガチャ v0.6｜2025年出生確定統計に基づく抽選テスト',
-        '試行回数\t' + n,
-        '都道府県：理論・実測とも全国の抽選回数を分母にしています。',
-        '都道府県\t理論(%)\t実測(%)\t当選回数\t差(ポイント)'
-    ];
-    for (const pref of PREFS) {
-        const count = prefCounts.get(pref[0]);
-        const actual = count / n * 100;
-        const expected = pref[1] * 100;
-        lines.push([pref[0],expected.toFixed(6),actual.toFixed(6),count,(actual - expected).toFixed(6)].join('\t'));
-    }
-    lines.push('');
-    lines.push('市区町村・区：理論・実測とも「その都道府県が選ばれた回数」を分母とする県内割合です。');
-    lines.push('都道府県\t市区町村コード\t市区町村名\t理論・県内(%)\t実測・県内(%)\t当選回数\t県の当選回数');
-    for (const pref of PREFS) {
-        const prefName = pref[0];
-        const prefDraws = prefCounts.get(prefName);
-        for (const city of CITIES[prefName]) {
-            const count = cityCounts.get(city[0]);
-            const actual = prefDraws === 0 ? '—' : (count / prefDraws * 100).toFixed(6);
-            lines.push([prefName,city[0],city[1],(city[2]*100).toFixed(6),actual,count,prefDraws].join('\t'));
-        }
-    }
-    return lines.join('\n');
-}
-
-function runTest() {
-    const n = Number($('runs').value);
-    const prefCounts = new Map();
-    const cityCounts = new Map();
-    for (const pref of PREFS) {
-        prefCounts.set(pref[0],0);
-        for (const city of CITIES[pref[0]]) {
-            cityCounts.set(city[0],0);
-        }
-    }
-    for (let i = 0; i < n; i++) {
-        const pref = pickPrefecture();
-        const city = pickMunicipality(pref);
-        prefCounts.set(pref,prefCounts.get(pref) + 1);
-        cityCounts.set(city[0],cityCounts.get(city[0]) + 1);
-    }
-    lastTest = {n,prefCounts,cityCounts};
-    lastReport = buildReport(n,prefCounts,cityCounts);
-
-    const root = $('resultRows');
-    root.replaceChildren();
-    const fragment = document.createDocumentFragment();
-    let max = 0;
-    for (const pref of PREFS) {
-        const count = prefCounts.get(pref[0]);
-        const expected = pref[1]*100;
-        const actual = count/n*100;
-        const deviation = Math.abs(actual-expected);
-        if (deviation>max) max=deviation;
-        addResultRow(fragment,pref[0],expected,actual,count,false);
-    }
-    root.append(fragment);
-    $('testN').textContent = n.toLocaleString('ja-JP');
-    $('maxDiff').textContent = max.toFixed(2);
-    $('copyStatus').textContent = '47県＋1,884市区町村の全件をコピーできます（タブ区切り）。';
-    $('results').hidden = false;
-    $('testMemo').textContent = n.toLocaleString('ja-JP')+'回の独立抽選。出生数が少ない地域では、10万回でも当選0回になることがあります。';
-    showCityResults();
-}
-
-async function copyAllResults() {
-    if (!lastReport) return;
-    try {
-        if (!navigator.clipboard || !navigator.clipboard.writeText) {
-            throw new Error('Clipboard API unavailable');
-        }
-        await navigator.clipboard.writeText(lastReport);
-        $('copyStatus').textContent = '全結果をコピーしたよ！ メモやExcelなどに貼り付けられます。';
-    } catch (error) {
-        // モバイルSafariの権限・ファイル表示にも対応する旧方式。
-        const input = document.createElement('textarea');
-        input.value = lastReport;
-        input.style.position = 'fixed';
-        input.style.opacity = '0';
-        input.style.left = '-1000px';
-        document.body.append(input);
-        input.focus();
-        input.select();
-        input.setSelectionRange(0,input.value.length);
-        const copied = document.execCommand('copy');
-        input.remove();
-        $('copyStatus').textContent = copied ? '全結果をコピーしたよ！' : 'コピーできませんでした。Safariで開き直して試してください。';
-    }
-}
-
-// デバッグの県内訳セレクトを初期化。
-for (const pref of PREFS) {
-    const option = document.createElement('option');
-    option.value = pref[0];
-    option.textContent = pref[0];
-    $('debugPref').append(option);
-}
-$('debugPref').addEventListener('change',showCityResults);
-
 document.querySelectorAll('.tab').forEach(button=>button.addEventListener('click',()=>{
     activeTab=button.dataset.tab;
     document.querySelectorAll('.tab').forEach(b=>{
@@ -304,35 +156,11 @@ document.querySelectorAll('.tab').forEach(button=>button.addEventListener('click
 $('rollBtn').addEventListener('click',()=>{
     currentPref = pickPrefecture();
     currentCity = pickMunicipality(currentPref);
-    lifeNo++;
-    $('lifeNumber').textContent = '出生記録 #'+String(lifeNo).padStart(3,'0')+'　·　0歳';
     $('birthPlace').textContent = currentPref+currentCity[1]+'に生まれました';
-    $('birthSub').textContent = '市区町村コード：'+currentCity[0]+'（母親の住所地）';
-    const prefData = PREFS.find(p=>p[0]===currentPref);
-    $('birthOdds').textContent = '県の出生確率 '+(prefData[1]*100).toFixed(2)+'% · 県内での市区町村確率 '+(currentCity[2]*100).toFixed(2)+'%';
-    $('birthOdds').style.display = 'inline-flex';
     $('rollBtn').textContent = 'もう一度抽選する';
-    $('debugPref').value = currentPref;
-    showCityResults();
     renderStats();
 });
 
-$('testBtn').addEventListener('click',()=>{
-    $('testBtn').disabled = true;
-    $('testBtn').textContent = '集計中…';
-    // UIを先に更新し、まとまった抽選処理を実行する。
-    setTimeout(()=>{
-        try { runTest(); }
-        catch(error) {
-            console.error(error);
-            alert('抽選テストでエラーが発生しました：'+error.message);
-        } finally {
-            $('testBtn').disabled=false;
-            $('testBtn').textContent='抽選テスト';
-        }
-    },0);
-});
-$('copyBtn').addEventListener('click',copyAllResults);
 renderStats();
 
 </script>

@@ -131,6 +131,7 @@ function renderStats() {
             const value = document.createElement('div');
             value.className = 'value';
             let display = '—';
+            if (field === '年齢' && currentPref && currentCity) display = '0歳';
             if (field === '都道府県' && currentPref) display = currentPref;
             if (field === '市区町村' && currentCity) display = currentCity[1];
             value.textContent = display;

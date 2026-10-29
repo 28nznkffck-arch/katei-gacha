@@ -13,13 +13,14 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.7 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.8 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
-<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">親や本人の属性はまだ抽選しません。欄はすべて仮配置です。出生地（都道府県・市区町村）だけを抽選します。</div></section>
-<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
-<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
+<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">出生地と性別を2025年実績に基づいて抽選します。年齢は出生時0歳。その他の親・本人の属性は未実装です。</div></section>
+<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>性別の市区町村別確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
+<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。性別は同じ2025年確定数の男女別出生実績に基づきExcelで計算した確率を使用。その他の親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
 </main>
 <script src="data/municipalities_2025.js"></script>
+<script src="data/sex_probabilities_2025.js"></script>
 <script>
  'use strict';
 // 2025年人口動態統計（確定数）、出生数の多い順。
@@ -99,6 +100,14 @@ function pickMunicipality(prefecture) {
     throw new Error('市区町村の抽選に失敗しました: ' + prefecture);
 }
 
+function pickSex(municipality) {
+    const maleProbability = SEX_MALE_PROB_2025[municipality[0]];
+    if (typeof maleProbability !== 'number') {
+        throw new Error('男女出生確率が見つかりません: ' + municipality[0]);
+    }
+    return Math.random() < maleProbability ? '男' : '女';
+}
+
 const GROUPS={
  person:[['基本情報',['年齢','性別','健康状態','先天的な体質','持病・障害']],['心と生活',['元気','楽しさ','ストレス','自己肯定感','興味・関心']],['能力・適性',['学力','運動能力','創造性','コミュニケーション','集中力','学習適性（内部）','運動適性（内部）']],['経験',['勉強経験','運動経験','外遊び経験','ゲーム経験','創作経験','その他の経験']]],
  family:[['家族構成',['母親の年齢','父親の年齢','母親との同居','父親との同居','きょうだい','祖父母などの同居']],['経済・生活',['世帯年収','世帯貯蓄','生活費','住居','親の就業状態','育児に使える時間']],['親の特徴',['親の学歴','教育熱心度','情報収集力','意思の尊重度','養育への関与度','しつけ方針']],['家庭内の関係',['親子関係','家庭の安心感','保護者間の関係','家庭内のストレス']]],
@@ -108,6 +117,7 @@ const GROUPS={
 let activeTab = 'person';
 let currentPref = null;
 let currentCity = null;
+let currentSex = null;
 
 const $ = id => document.getElementById(id);
 
@@ -132,6 +142,7 @@ function renderStats() {
             value.className = 'value';
             let display = '—';
             if (field === '年齢' && currentPref && currentCity) display = '0歳';
+            if (field === '性別' && currentSex) display = currentSex;
             if (field === '都道府県' && currentPref) display = currentPref;
             if (field === '市区町村' && currentCity) display = currentCity[1];
             value.textContent = display;
@@ -157,6 +168,7 @@ document.querySelectorAll('.tab').forEach(button=>button.addEventListener('click
 $('rollBtn').addEventListener('click',()=>{
     currentPref = pickPrefecture();
     currentCity = pickMunicipality(currentPref);
+    currentSex = pickSex(currentCity);
     $('birthPlace').textContent = currentPref+currentCity[1]+'に生まれました';
     $('rollBtn').textContent = 'もう一度抽選する';
     renderStats();

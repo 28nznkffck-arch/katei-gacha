@@ -13,16 +13,16 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.9 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.9.1 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
-<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">出生地・性別・母親の年齢を2025年実績に基づいて抽選します。本人の年齢は出生時0歳。母親の年齢は全国の出生数に基づき、居住地とは独立に抽選します。</div></section>
+<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">出生地・性別・母親の年齢を2025年実績に基づいて抽選します。本人の年齢は出生時0歳。母親の年齢は居住地と独立に14〜57歳の整数から抽選します。年齢不詳は除外しています。</div></section>
 <section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>性別の市区町村別確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢（全国各歳別）抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
-<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。性別は同じ2025年確定数の男女別出生実績に基づく確率を使用。母親の年齢は全国・各歳別出生数（中巻第7表）から居住地と独立に抽選。すべての確率と累積確率はExcelで計算済み。母親の年齢に関する公表区分（14歳以下・55歳以上・不詳）はそのまま表示。その他の親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
+<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。性別は同じ2025年確定数の男女別出生実績に基づく確率を使用。母親の年齢は全国・各歳別出生数（中巻第7表）から居住地と独立に抽選。すべての確率と累積確率はExcelで計算済み。母親の年齢不詳19件を除外し、14歳以下37件を14歳、55歳以上18件を55歳8件・56歳6件・57歳4件に推定配分。各年齢の出生確率が高い順に並べた累積確率で抽選。その他の親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
 </main>
 <script src="data/prefectures_2025.js"></script>
 <script src="data/municipalities_2025.js"></script>
 <script src="data/sex_probabilities_2025.js"></script>
-<script src="data/mother_age_probabilities_2025.js"></script>
+<script src="data/mother_age_probabilities_2025.js?v=0.9.1"></script>
 <script>
  'use strict';
 
@@ -62,7 +62,7 @@ function pickSex(municipality) {
 function pickMotherAge() {
     const random = Math.random();
     for (const [age, cumulative] of MOTHER_AGE_CUMULATIVE_2025) {
-        if (random < cumulative) return age;
+        if (random < cumulative && Number.isInteger(age)) return age;
     }
     throw new Error('母親の年齢の抽選に失敗しました。累積確率を確認してください。');
 }
@@ -103,7 +103,7 @@ function renderStats() {
             let display = '—';
             if (field === '年齢' && currentPref && currentCity) display = '0歳';
             if (field === '性別' && currentSex) display = currentSex;
-            if (field === '母親の年齢' && currentMotherAge !== null) display = typeof currentMotherAge === 'number' ? currentMotherAge+'歳' : currentMotherAge;
+            if (field === '母親の年齢' && currentMotherAge !== null) display = currentMotherAge+'歳';
             if (field === '都道府県' && currentPref) display = currentPref;
             if (field === '市区町村' && currentCity) display = currentCity[1];
             value.textContent = display;

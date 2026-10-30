@@ -13,16 +13,17 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.9.1 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.10 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
-<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">出生地・性別・母親の年齢を2025年実績に基づいて抽選します。本人の年齢は出生時0歳。母親の年齢は居住地と独立に14〜57歳の整数から抽選します。年齢不詳は除外しています。</div></section>
-<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>性別の市区町村別確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢（全国各歳別）抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
-<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。性別は同じ2025年確定数の男女別出生実績に基づく確率を使用。母親の年齢は全国・各歳別出生数（中巻第7表）から居住地と独立に抽選。すべての確率と累積確率はExcelで計算済み。母親の年齢不詳19件を除外し、14歳以下37件を14歳、55歳以上18件を55歳8件・56歳6件・57歳4件に推定配分。各年齢の出生確率が高い順に並べた累積確率で抽選。その他の親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
+<section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div><div class="note">出生地・性別・母親の年齢・両親の関係を2025年実績に基づいて抽選します。本人の年齢は出生時0歳。母親の年齢は居住地と独立に14〜57歳の整数から抽選します。年齢不詳は除外しています。両親の関係は、母親の年齢ごとに嫡出・非嫡出の割合から「既婚／未婚」を抽選します。</div></section>
+<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>都道府県の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>市区町村の累積確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>性別の市区町村別確率抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢（全国各歳別）抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>両親の関係（母親の年齢別）抽選</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
+<footer class="foot">都道府県・市区町村の出生確率は厚生労働省の2025年人口動態統計（確定数）に基づく計算済みデータを使用しています。対象は日本国内の日本人出生。出生地の市区町村は母親の住所地であり、出産した医療機関の所在地とは限りません。性別は同じ2025年確定数の男女別出生実績に基づく確率を使用。母親の年齢は全国・各歳別出生数（中巻第7表）から居住地と独立に抽選。すべての確率と累積確率はExcelで計算済み。母親の年齢不詳19件を除外し、14歳以下37件を14歳、55歳以上18件を55歳8件・56歳6件・57歳4件に推定配分。各年齢の出生確率が高い順に並べた累積確率で抽選。両親の関係は2025年人口動態統計・中巻第7表の嫡出子（既婚扱い）・非嫡出子（未婚扱い）別出生実績から、母親の年齢を条件に抽選。法的な子の区分を出産時の父母の婚姻状態の近似として使用。55歳以上の内訳は推定配分。その他の親・本人の属性は未実装。<br>HTML / CSS / JavaScriptのみで動作し、外部ライブラリ・外部APIは使用していません。</footer>
 </main>
 <script src="data/prefectures_2025.js"></script>
 <script src="data/municipalities_2025.js"></script>
 <script src="data/sex_probabilities_2025.js"></script>
 <script src="data/mother_age_probabilities_2025.js?v=0.9.1"></script>
+<script src="data/parent_relationship_probabilities_2025.js?v=0.10"></script>
 <script>
  'use strict';
 
@@ -67,9 +68,17 @@ function pickMotherAge() {
     throw new Error('母親の年齢の抽選に失敗しました。累積確率を確認してください。');
 }
 
+function pickParentsRelationship(motherAge) {
+    const marriedProbability = PARENTS_MARRIED_CUMULATIVE_2025[motherAge];
+    if (typeof marriedProbability !== 'number') {
+        throw new Error('両親の関係の抽選確率が見つかりません: 母親' + motherAge + '歳');
+    }
+    return Math.random() < marriedProbability ? '既婚' : '未婚';
+}
+
 const GROUPS={
  person:[['基本情報',['年齢','性別','健康状態','先天的な体質','持病・障害']],['心と生活',['元気','楽しさ','ストレス','自己肯定感','興味・関心']],['能力・適性',['学力','運動能力','創造性','コミュニケーション','集中力','学習適性（内部）','運動適性（内部）']],['経験',['勉強経験','運動経験','外遊び経験','ゲーム経験','創作経験','その他の経験']]],
- family:[['家族構成',['母親の年齢','父親の年齢','母親との同居','父親との同居','きょうだい','祖父母などの同居']],['経済・生活',['世帯年収','世帯貯蓄','生活費','住居','親の就業状態','育児に使える時間']],['親の特徴',['親の学歴','教育熱心度','情報収集力','意思の尊重度','養育への関与度','しつけ方針']],['家庭内の関係',['親子関係','家庭の安心感','保護者間の関係','家庭内のストレス']]],
+ family:[['家族構成',['両親の関係','母親の年齢','父親の年齢','母親との同居','父親との同居','きょうだい','祖父母などの同居']],['経済・生活',['世帯年収','世帯貯蓄','生活費','住居','親の就業状態','育児に使える時間']],['親の特徴',['親の学歴','教育熱心度','情報収集力','意思の尊重度','養育への関与度','しつけ方針']],['家庭内の関係',['親子関係','家庭の安心感','保護者間の関係','家庭内のストレス']]],
  environment:[['居住・地域',['都道府県','市区町村','住環境','地域の安全性','遊び場へのアクセス','学校へのアクセス','公共交通']],['学校・社会',['所属する学校','学校風土','担任との関係','友人数','親しい友人','いじめの状況','学校外の居場所']],['イベント・内部管理',['今年の行動方針','本人が知っている情報','開放済み選択肢','親による強制イベント','進路フラグ','イベント履歴','乱数シード']]]
 };
 
@@ -78,6 +87,7 @@ let currentPref = null;
 let currentCity = null;
 let currentSex = null;
 let currentMotherAge = null;
+let currentParentsRelationship = null;
 
 const $ = id => document.getElementById(id);
 
@@ -104,6 +114,7 @@ function renderStats() {
             if (field === '年齢' && currentPref && currentCity) display = '0歳';
             if (field === '性別' && currentSex) display = currentSex;
             if (field === '母親の年齢' && currentMotherAge !== null) display = currentMotherAge+'歳';
+            if (field === '両親の関係' && currentParentsRelationship !== null) display = currentParentsRelationship;
             if (field === '都道府県' && currentPref) display = currentPref;
             if (field === '市区町村' && currentCity) display = currentCity[1];
             value.textContent = display;
@@ -131,6 +142,7 @@ $('rollBtn').addEventListener('click',()=>{
     currentCity = pickMunicipality(currentPref);
     currentSex = pickSex(currentCity);
     currentMotherAge = pickMotherAge();
+    currentParentsRelationship = pickParentsRelationship(currentMotherAge);
     $('birthPlace').textContent = currentPref+currentCity[1]+'に生まれました';
     $('rollBtn').textContent = 'もう一度抽選する';
     renderStats();

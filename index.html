@@ -13,10 +13,10 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.10.1 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.11.0 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
 <section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div></section>
-<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>生まれる都道府県</span><b class="ready">動作中</b></div><div class="status-row"><span>生まれる市区町村</span><b class="ready">動作中</b></div><div class="status-row"><span>性別</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢</span><b class="ready">動作中</b></div><div class="status-row"><span>両親の関係</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
+<section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>生まれる都道府県</span><b class="ready">動作中</b></div><div class="status-row"><span>生まれる市区町村</span><b class="ready">動作中</b></div><div class="status-row"><span>性別</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢</span><b class="ready">動作中</b></div><div class="status-row"><span>両親の関係</span><b class="ready">動作中</b></div><div class="status-row"><span>父親の年齢（既婚時）</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
 
 </main>
 <script src="data/prefectures_2025.js"></script>
@@ -24,6 +24,7 @@
 <script src="data/sex_probabilities_2025.js"></script>
 <script src="data/mother_age_probabilities_2025.js?v=0.9.1"></script>
 <script src="data/parent_relationship_probabilities_2025.js?v=0.10"></script>
+<script src="data/father_age_probabilities_2025.js?v=0.11"></script>
 <script>
  'use strict';
 
@@ -76,6 +77,23 @@ function pickParentsRelationship(motherAge) {
     return Math.random() < marriedProbability ? '既婚' : '未婚';
 }
 
+function pickFatherAge(motherAge, parentsRelationship) {
+    // 未婚家庭の父親年齢については、判明しているケースも含め後日対応する。
+    if (parentsRelationship === '未婚') return null;
+    if (parentsRelationship !== '既婚') {
+        throw new Error('未対応の両親の関係です: ' + parentsRelationship);
+    }
+    const distribution = FATHER_AGE_CUMULATIVE_BY_MOTHER_2025[motherAge];
+    if (!distribution) {
+        throw new Error('父親の年齢の抽選確率が見つかりません: 母親' + motherAge + '歳');
+    }
+    const random = Math.random();
+    for (const [fatherAge, cumulative] of distribution) {
+        if (random < cumulative) return fatherAge;
+    }
+    throw new Error('父親の年齢の抽選に失敗しました: 母親' + motherAge + '歳');
+}
+
 const GROUPS={
  person:[['基本情報',['年齢','性別','健康状態','先天的な体質','持病・障害']],['心と生活',['元気','楽しさ','ストレス','自己肯定感','興味・関心']],['能力・適性',['学力','運動能力','創造性','コミュニケーション','集中力','学習適性（内部）','運動適性（内部）']],['経験',['勉強経験','運動経験','外遊び経験','ゲーム経験','創作経験','その他の経験']]],
  family:[['家族構成',['両親の関係','母親の年齢','父親の年齢','母親との同居','父親との同居','きょうだい','祖父母などの同居']],['経済・生活',['世帯年収','世帯貯蓄','生活費','住居','親の就業状態','育児に使える時間']],['親の特徴',['親の学歴','教育熱心度','情報収集力','意思の尊重度','養育への関与度','しつけ方針']],['家庭内の関係',['親子関係','家庭の安心感','保護者間の関係','家庭内のストレス']]],
@@ -88,6 +106,7 @@ let currentCity = null;
 let currentSex = null;
 let currentMotherAge = null;
 let currentParentsRelationship = null;
+let currentFatherAge = null;
 
 const $ = id => document.getElementById(id);
 
@@ -115,6 +134,9 @@ function renderStats() {
             if (field === '性別' && currentSex) display = currentSex;
             if (field === '母親の年齢' && currentMotherAge !== null) display = currentMotherAge+'歳';
             if (field === '両親の関係' && currentParentsRelationship !== null) display = currentParentsRelationship;
+            if (field === '父親の年齢' && currentParentsRelationship !== null) {
+                display = currentParentsRelationship === '未婚' ? '不明' : currentFatherAge+'歳';
+            }
             if (field === '都道府県' && currentPref) display = currentPref;
             if (field === '市区町村' && currentCity) display = currentCity[1];
             value.textContent = display;
@@ -143,6 +165,7 @@ $('rollBtn').addEventListener('click',()=>{
     currentSex = pickSex(currentCity);
     currentMotherAge = pickMotherAge();
     currentParentsRelationship = pickParentsRelationship(currentMotherAge);
+    currentFatherAge = pickFatherAge(currentMotherAge, currentParentsRelationship);
     $('birthPlace').textContent = currentPref+currentCity[1]+'に生まれました';
     $('rollBtn').textContent = 'もう一度抽選する';
     renderStats();

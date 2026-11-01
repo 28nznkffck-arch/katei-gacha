@@ -13,7 +13,7 @@
 </style>
 </head>
 <body><main>
-<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.12.2 ブラウザ版</span></header>
+<header class="topline"><div><div class="eyebrow">LIFE SIMULATION / PROTOTYPE</div><h1>日本のご家庭ガチャ</h1></div><span class="version">v0.12.3 ブラウザ版</span></header>
 <section class="hero" aria-live="polite"><div class="hero-content"><div class="symbol" aria-hidden="true">🎲</div><h2 class="place" id="birthPlace">まだ生まれていません</h2></div><button class="primary" id="rollBtn">出生地を抽選する</button></section>
 <section class="block"><div class="heading"><h2>ステータス</h2><span class="subtext">配置確認用・未抽選</span></div><nav class="tabs" aria-label="ステータス分類"><button class="tab active" type="button" data-tab="person" aria-pressed="true">本人</button><button class="tab" type="button" data-tab="family" aria-pressed="false">家庭</button><button class="tab" type="button" data-tab="environment" aria-pressed="false">環境</button></nav><div id="statPanel" class="stat-panel"></div></section>
 <section class="block"><div class="heading"><h2>実装状況</h2><span class="subtext">開発メモ</span></div><div class="tool-box"><div class="status-row"><span>生まれる都道府県</span><b class="ready">動作中</b></div><div class="status-row"><span>生まれる市区町村</span><b class="ready">動作中</b></div><div class="status-row"><span>性別</span><b class="ready">動作中</b></div><div class="status-row"><span>母親の年齢</span><b class="ready">動作中</b></div><div class="status-row"><span>両親の関係</span><b class="ready">動作中</b></div><div class="status-row"><span>父親の年齢（既婚時）</span><b class="ready">動作中</b></div><div class="status-row"><span>その他の親・本人のパラメータ抽選</span><b class="pending">未実装</b></div><div class="status-row"><span>0〜5歳の自動進行</span><b class="pending">未実装</b></div></div></section>
@@ -23,7 +23,7 @@
 <script src="data/municipalities_2025.js"></script>
 <script src="data/sex_probabilities_2025.js"></script>
 <script src="data/parent_age_joint_probabilities_2025.js?v=0.12.2"></script>
-<script src="data/parent_relationship_probabilities_2025.js?v=0.12.0"></script>
+<script src="data/parent_relationship_probabilities_2025.js?v=0.12.3"></script>
 <script>
  'use strict';
 
@@ -68,12 +68,38 @@ function pickParentAges() {
     throw new Error('父母の年齢の同時抽選に失敗しました。累積確率を確認してください。');
 }
 
-function pickParentsRelationship(motherAge) {
-    const marriedProbability = PARENTS_MARRIED_CUMULATIVE_2025[motherAge];
-    if (typeof marriedProbability !== 'number') {
+// 母親各歳の父親17歳以下の割合を、父母年齢の同時分布から一度だけ算出。
+const FATHER_UNDER_18_SHARE_BY_MOTHER = (() => {
+    const groups = Object.create(null);
+    let previousCumulative = 0;
+    for (const [motherAge, fatherAge, cumulative] of PARENT_AGES_JOINT_CUMULATIVE_2025) {
+        const pairProbability = cumulative - previousCumulative;
+        previousCumulative = cumulative;
+        if (!groups[motherAge]) groups[motherAge] = {total: 0, under18: 0};
+        groups[motherAge].total += pairProbability;
+        if (fatherAge <= 17) groups[motherAge].under18 += pairProbability;
+    }
+    return Object.fromEntries(Object.entries(groups).map(([age, group]) => [
+        age, group.under18 / group.total,
+    ]));
+})();
+
+function pickParentsRelationship(motherAge, fatherAge) {
+    const targetMarriedProbability = PARENTS_MARRIED_CUMULATIVE_2025[motherAge];
+    if (typeof targetMarriedProbability !== 'number') {
         throw new Error('両親の関係の抽選確率が見つかりません: 母親' + motherAge + '歳');
     }
-    return Math.random() < marriedProbability ? '既婚' : '未婚';
+    if (motherAge <= 17 || fatherAge <= 17) return '未婚';
+
+    // 父親17歳以下は未婚確定なので、父親18歳以上に割り当てる既婚率を引き上げる。
+    // P(既婚 | 母m, 父>=18) = P(既婚 | 母m) / (1 - P(父<=17 | 母m))
+    // これで母親年齢ごとの全体の未婚率は元の目標値と一致する。
+    const eligibleFatherShare = 1 - FATHER_UNDER_18_SHARE_BY_MOTHER[motherAge];
+    const adjustedMarriedProbability = targetMarriedProbability / eligibleFatherShare;
+    if (!Number.isFinite(adjustedMarriedProbability) || adjustedMarriedProbability < 0 || adjustedMarriedProbability > 1 + 1e-10) {
+        throw new Error('両親の関係の確率補正が成立しません: 母親' + motherAge + '歳');
+    }
+    return Math.random() < Math.min(1, adjustedMarriedProbability) ? '既婚' : '未婚';
 }
 
 const GROUPS={
@@ -148,7 +174,7 @@ $('rollBtn').addEventListener('click',()=>{
     const parents = pickParentAges();
     currentMotherAge = parents.motherAge;
     currentFatherAge = parents.fatherAge;
-    currentParentsRelationship = pickParentsRelationship(currentMotherAge);
+    currentParentsRelationship = pickParentsRelationship(currentMotherAge, currentFatherAge);
     // 未婚の場合は父親年齢の実測根拠がないため、画面では「不明」と表示する。
     $('birthPlace').textContent = currentPref+currentCity[1]+'に生まれました';
     $('rollBtn').textContent = 'もう一度抽選する';
